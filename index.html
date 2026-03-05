@@ -1,4 +1,4 @@
-<!doctype html>
+ <!doctype html>
 <html lang="es">
 <head>
   <meta charset="utf-8" />
@@ -174,7 +174,7 @@
       width: 1240px;
       height: 1754px;
       position: relative;
-      background: url('cert_bg.png') center/cover no-repeat;
+      background: url('certificado_bg.png') center/cover no-repeat;
       color: #2b2b2b;
     }
     .cert-logo{
@@ -218,6 +218,9 @@
       transform: translateX(-50%);
       width: 720px;
       text-align:center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
       font-family: "Brush Script MT", "Segoe Script", "Snell Roundhand", cursive;
       font-size: 68px;
       color: rgba(35,35,35,.9);
@@ -525,7 +528,7 @@
   <!-- Hoja del certificado (se renderiza a PDF; queda fuera de pantalla) -->
   <div id="certificateSheet" aria-hidden="true">
     <div class="cert-page">
-      <img class="cert-logo" src="logo3d.png" alt="McB">
+      <img class="cert-logo" src="logotipo3d.png" alt="McB">
 
       
       
@@ -548,7 +551,7 @@
       </div>
 
       <div class="cert-signature">
-        <img src="signature.png" alt="Momentos con Blancanieves">
+        <img src="firma.png" alt="Momentos con Blancanieves">
 </div>
 
       <div class="cert-date" id="certDateOut">Fecha de finalización: —</div>
@@ -1029,10 +1032,28 @@ function updateCertUI(){
       await new Promise(r => setTimeout(r, 80));
     }
 
-    async function generateCertificatePDF(participantName){
+    
+    function fitCertName(){
+      const el = document.getElementById("certNameOut");
+      if(!el) return;
+      const base = 68;
+      const min = 34;
+      el.style.whiteSpace = "nowrap";
+      el.style.fontSize = base + "px";
+      el.getBoundingClientRect();
+      let guard = 0;
+      while(el.scrollWidth > el.clientWidth && parseFloat(getComputedStyle(el).fontSize) > min && guard < 120){
+        const cur = parseFloat(getComputedStyle(el).fontSize);
+        el.style.fontSize = (cur - 1) + "px";
+        guard++;
+      }
+    }
+
+async function generateCertificatePDF(participantName){
       // Rellena el certificado en el DOM
       const safeName = String(participantName || "").trim();
       document.getElementById("certNameOut").textContent = safeName || "(nombre)";
+      fitCertName();
 
       // Fecha real de finalización (blindado): se fija al completar el programa.
       const finalDate = state.completedAt ? new Date(state.completedAt) : new Date();
@@ -2046,7 +2067,7 @@ function isCourseCompletedForCert(){
   return arr.length >= 6;
 }
 function isCertUnlocked(){
-  return isCourseCompletedForCert() && ritualCompletionCountForCert() >= 21;
+  return isProgramCompleted();
 }
 
 function openCertModal(){
@@ -3171,34 +3192,6 @@ if(!state.completedAt){
     wire();
   </script>
   <script>
- <script>
-  window.addEventListener("load", () => {
-    const btn = document.createElement("button");
-    btn.textContent = "TEST · Descargar certificado";
-    btn.style.position = "fixed";
-    btn.style.right = "16px";
-    btn.style.bottom = "16px";
-    btn.style.zIndex = "999999";
-    btn.style.padding = "12px 14px";
-    btn.style.borderRadius = "14px";
-    btn.style.border = "0";
-    btn.style.cursor = "pointer";
-    btn.style.boxShadow = "0 10px 28px rgba(0,0,0,.22)";
-
-    btn.addEventListener("click", async () => {
-      try {
-        await generateCertificatePDF("PRUEBA");
-      } catch (e) {
-        alert("Error generando el certificado. Mira la consola (F12) para ver el fallo.");
-        console.error(e);
-      }
-    });
-
-    document.body.appendChild(btn);
-  });
-</script>
-
-<script>
 // ---- McB: mostrar cierre cuando está completado ----
 (function(){
   function showFinalIfCompleted(){
