@@ -58,10 +58,10 @@
           <div class="pill" id="mcbCertPill">Bloqueado</div>
         </div>
 
-        <div class="pills">
-          <a class="btn primary" href="#curso">Temario</a>
-          <a class="btn" href="#ritual">Ritual</a>
-          <a class="btn" href="#cert">Certificado</a>
+        <div class="pills" style="margin-top:12px;">
+          <button class="btn primary side-tab" data-tab="curso" type="button">Temario</button>
+          <button class="btn side-tab" data-tab="ritual" type="button">Ritual</button>
+          <button class="btn side-tab" data-tab="cert" type="button">Certificado</button>
         </div>
 
         <div class="muted" style="margin-top:14px; font-size:12px; line-height:1.5;">
@@ -106,63 +106,76 @@
 
 <script>
   // Tabs
-  const tabs = document.querySelectorAll(".tab");
+  const topTabs = Array.from(document.querySelectorAll(".tab"));
+  const sideTabs = Array.from(document.querySelectorAll(".side-tab"));
   const panels = {
     curso: document.getElementById("panel-curso"),
     ritual: document.getElementById("panel-ritual"),
     cert: document.getElementById("panel-cert"),
   };
+
   function setTab(name){
-    tabs.forEach(t => t.classList.toggle("active", t.dataset.tab === name));
+    topTabs.forEach(t => t.classList.toggle("active", t.dataset.tab === name));
+    sideTabs.forEach(t => t.classList.toggle("primary", t.dataset.tab === name));
     Object.entries(panels).forEach(([k, el]) => el.classList.toggle("active", k === name));
     history.replaceState(null, "", "#" + name);
   }
-  tabs.forEach(t => t.addEventListener("click", () => setTab(t.dataset.tab)));
+
+  topTabs.forEach(t => t.addEventListener("click", () => setTab(t.dataset.tab)));
+  sideTabs.forEach(t => t.addEventListener("click", () => setTab(t.dataset.tab)));
+
   const hash = (location.hash || "").replace("#","");
   if(hash === "ritual" || hash === "cert" || hash === "curso") setTab(hash);
 
-  // Progress (best-effort; depends on your internal storage keys)
-  function findStateLike(){
-    const commonKeys = ["state","mcbState","McBState","appState","mcb","McB","progress"];
-    for(const k of commonKeys){
-      const v = localStorage.getItem(k);
-      if(!v) continue;
-      try{
-        const o = JSON.parse(v);
-        if(o && typeof o === "object") return o;
-      }catch(e){}
-    }
-    for(let i=0; i<localStorage.length; i++){
-      const k = localStorage.key(i);
-      const v = localStorage.getItem(k);
-      if(!v || v.length < 10) continue;
-      try{
-        const o = JSON.parse(v);
-        if(o && typeof o === "object"){
-          const keys = Object.keys(o);
-          if(keys.includes("completedLessons") || keys.includes("ritualDays") || keys.includes("certificateId")){
-            return o;
-          }
-        }
-      }catch(e){}
-    }
-    return null;
-  }
-  function renderProgress(){
-    const s = findStateLike() || {};
-    const completedLessons = Array.isArray(s.completedLessons) ? s.completedLessons.length : (Array.isArray(s.doneLessons) ? s.doneLessons.length : null);
-    const ritualDays = (typeof s.ritualDays === "number") ? s.ritualDays : (typeof s.ritual === "number" ? s.ritual : null);
-    const certId = s.certificateId ? String(s.certificateId) : "";
+  // Progress (exact keys used by course.html)
+  const COURSE_KEY = "mcb_mindfulness_curso_v1";
+  const RITUAL_KEY = "mcb_21_v1";
 
-    document.getElementById("mcbCourse").textContent = (completedLessons === null) ? "—" : completedLessons;
-    document.getElementById("mcbRitual").textContent = (ritualDays === null) ? "—" : (ritualDays + "/21");
+  function readJSON(key){
+    try{
+      const raw = localStorage.getItem(key);
+      if(!raw) return null;
+      return JSON.parse(raw);
+    }catch(e){
+      return null;
+    }
+  }
+
+  function countCompletedLessons(courseState){
+    const cl = courseState && courseState.completedLessons;
+    if(!cl || typeof cl !== "object") return 0;
+    return Object.keys(cl).filter(k => cl[k]).length;
+  }
+
+  function countRitualDays(ritualState){
+    const days = ritualState && ritualState.days;
+    if(!Array.isArray(days)) return 0;
+    return days.filter(d => d && d.completedOn).length;
+  }
+
+  function renderProgress(){
+    const courseState = readJSON(COURSE_KEY) || {};
+    const ritualState = readJSON(RITUAL_KEY) || {};
+
+    const lessons = countCompletedLessons(courseState);
+    const ritualDays = countRitualDays(ritualState);
+    const certId = (courseState.certificateId || "").trim();
+
+    const unlocked = (lessons >= 6) && (ritualDays >= 21);
+
+    document.getElementById("mcbCourse").textContent = lessons ? String(lessons) : "—";
+    document.getElementById("mcbCourseSub").textContent = lessons ? (lessons + "/6 lecciones") : "Lecciones completadas";
+
+    document.getElementById("mcbRitual").textContent = ritualDays ? (ritualDays + "/21") : "—";
+
     document.getElementById("mcbCert").textContent = certId ? certId : "—";
+    document.getElementById("mcbCertSub").textContent = unlocked ? "Listo para descargar" : "Se desbloquea al completar";
 
     const coursePill = document.getElementById("mcbCoursePill");
     const ritualPill = document.getElementById("mcbRitualPill");
     const certPill = document.getElementById("mcbCertPill");
 
-    if(completedLessons !== null && completedLessons >= 6){
+    if(lessons >= 6){
       coursePill.textContent = "Completado";
       coursePill.style.background = "rgba(151,165,154,.18)";
     }else{
@@ -170,7 +183,7 @@
       coursePill.style.background = "rgba(201,179,166,.16)";
     }
 
-    if(ritualDays !== null && ritualDays >= 21){
+    if(ritualDays >= 21){
       ritualPill.textContent = "Completado";
       ritualPill.style.background = "rgba(151,165,154,.18)";
     }else{
@@ -178,7 +191,6 @@
       ritualPill.style.background = "rgba(201,179,166,.16)";
     }
 
-    const unlocked = (completedLessons !== null && completedLessons >= 6) && (ritualDays !== null && ritualDays >= 21);
     if(unlocked){
       certPill.textContent = "Desbloqueado";
       certPill.style.background = "rgba(151,165,154,.18)";
@@ -190,7 +202,7 @@
 
   window.addEventListener("load", () => {
     renderProgress();
-    setInterval(renderProgress, 1500);
+    setInterval(renderProgress, 1200);
   });
 </script>
 </body>
