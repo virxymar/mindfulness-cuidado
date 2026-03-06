@@ -185,17 +185,7 @@
       height: 220px;
     }
     
-    .cert-side-label{
-      position:absolute;
-      left: 55px;
-      top: 50%;
-      transform: translateY(-50%) rotate(-90deg);
-      transform-origin: left top;
-      font-family: Lora, Georgia, serif;
-      letter-spacing: .35em;
-      font-size: 34px;
-      color: rgba(40,40,40,.55);
-    }
+    .cert-side-label{display:none !important;}
 
     .cert-title{
       position:absolute;
@@ -308,45 +298,6 @@
   opacity: 0.5;
   letter-spacing: 0.05em;
 }
-
-    /* ---- Premium final screen ---- */
-    .mcbPremiumFinal{
-      position: fixed; inset: 0; z-index: 9998;
-      background: rgba(250,248,245,.82);
-      backdrop-filter: blur(6px);
-      display:flex; align-items:center; justify-content:center;
-      padding: 18px;
-    }
-    .mcbPremiumFinal.hidden{ display:none; }
-    .mcbPremiumCard{
-      width:min(760px, 94vw);
-      background: var(--card);
-      border: 1px solid var(--line);
-      box-shadow: var(--shadow);
-      border-radius: 22px;
-      padding: 26px 22px;
-      text-align:center;
-    }
-    .mcbPremiumKicker{
-      letter-spacing: .14em; text-transform: uppercase;
-      font-size: 12px; color: var(--muted);
-      margin-bottom: 10px;
-    }
-    .mcbPremiumTitle{
-      font-family: Lora, Georgia, serif;
-      font-size: 34px; line-height:1.18; margin-bottom: 12px;
-    }
-    .mcbPremiumText{
-      font-size: 16px; line-height: 1.65; color: var(--muted);
-      max-width: 52ch; margin: 0 auto 16px;
-    }
-    .mcbPremiumActions{
-      display:flex; gap:10px; justify-content:center; flex-wrap:wrap;
-    }
-    @media (max-width: 720px){
-      .mcbPremiumTitle{ font-size: 28px; }
-    }
-
 </style>
 </head>
 
@@ -502,7 +453,7 @@
       <img class="cert-logo" src="logotipo3d.png" alt="McB">
 
       
-      <div class="cert-side-label">CERTIFICADO</div>
+      
 <div class="cert-title">DE PRÁCTICA<br>CONSCIENTE</div>
       <div class="cert-sub">Por la presente se certifica que</div>
 
@@ -1008,13 +959,12 @@ function updateCertUI(){
       const safeName = String(participantName || "").trim();
       document.getElementById("certNameOut").textContent = safeName || "(nombre)";
 
-      // Ajuste automático del nombre para que quede en una sola línea
       (function fitCertName(){
         const el = document.getElementById("certNameOut");
         if(!el) return;
         let size = 56;
-        el.style.fontSize = size + "px";
         el.style.whiteSpace = "nowrap";
+        el.style.fontSize = size + "px";
         while (el.scrollWidth > el.clientWidth && size > 30){
           size -= 1;
           el.style.fontSize = size + "px";
@@ -2208,46 +2158,7 @@ if(!state.completedAt){
       background: rgba(181,140,149,0.10);
     }
     .grid-day[data-state="locked"]{ opacity: .55; cursor: not-allowed; }
-  
-    /* ---- Premium final screen ---- */
-    .mcbPremiumFinal{
-      position: fixed; inset: 0; z-index: 9998;
-      background: rgba(250,248,245,.82);
-      backdrop-filter: blur(6px);
-      display:flex; align-items:center; justify-content:center;
-      padding: 18px;
-    }
-    .mcbPremiumFinal.hidden{ display:none; }
-    .mcbPremiumCard{
-      width:min(760px, 94vw);
-      background: var(--card);
-      border: 1px solid var(--line);
-      box-shadow: var(--shadow);
-      border-radius: 22px;
-      padding: 26px 22px;
-      text-align:center;
-    }
-    .mcbPremiumKicker{
-      letter-spacing: .14em; text-transform: uppercase;
-      font-size: 12px; color: var(--muted);
-      margin-bottom: 10px;
-    }
-    .mcbPremiumTitle{
-      font-family: Lora, Georgia, serif;
-      font-size: 34px; line-height:1.18; margin-bottom: 12px;
-    }
-    .mcbPremiumText{
-      font-size: 16px; line-height: 1.65; color: var(--muted);
-      max-width: 52ch; margin: 0 auto 16px;
-    }
-    .mcbPremiumActions{
-      display:flex; gap:10px; justify-content:center; flex-wrap:wrap;
-    }
-    @media (max-width: 720px){
-      .mcbPremiumTitle{ font-size: 28px; }
-    }
-
-</style>
+  </style>
 </head>
 
 <body>
@@ -3209,110 +3120,10 @@ if(!state.completedAt){
     document.body.appendChild(btn);
   });
 </script>
-
-<div id="mcbPremiumFinal" class="mcbPremiumFinal hidden" aria-hidden="true">
-  <div class="mcbPremiumCard">
-    <div class="mcbPremiumKicker">Has completado el Método McB</div>
-    <div class="mcbPremiumTitle">Tu práctica consciente merece ser celebrada.</div>
-    <div class="mcbPremiumText">
-      Este certificado reconoce tu compromiso contigo, con tu ritmo y con el cuidado consciente.
-    </div>
-    <div class="mcbPremiumActions">
-      <button id="mcbPremiumCertBtn" class="btn btn-primary focus-ring" type="button">Descargar mi certificado</button>
-      <button id="mcbPremiumCloseBtn" class="btn focus-ring" type="button">Seguir viendo mi panel</button>
-    </div>
-  </div>
-</div>
-
-
-<script>
-(function(){
-  function mcbIsCompleteSafe(){
-    try{ return typeof isProgramCompleted === "function" && isProgramCompleted(); }catch(e){ return false; }
-  }
-  function mcbShowPremiumFinal(){
-    const box = document.getElementById("mcbPremiumFinal");
-    if(!box) return;
-    if(mcbIsCompleteSafe()){
-      box.classList.remove("hidden");
-      box.setAttribute("aria-hidden","false");
-    }
-  }
-  window.addEventListener("load", () => {
-    const certBtn = document.getElementById("mcbPremiumCertBtn");
-    const closeBtn = document.getElementById("mcbPremiumCloseBtn");
-    const box = document.getElementById("mcbPremiumFinal");
-
-    if(certBtn){
-      certBtn.addEventListener("click", () => {
-        try{
-          if(typeof openCertModal === "function") openCertModal();
-        }catch(e){}
-      });
-    }
-    if(closeBtn && box){
-      closeBtn.addEventListener("click", () => box.classList.add("hidden"));
-    }
-    setTimeout(mcbShowPremiumFinal, 300);
-    setInterval(mcbShowPremiumFinal, 1800);
-  });
-})();
-</script>
-
 </body>
 </html>
 
 </template>
-
-
-<div id="mcbPremiumFinal" class="mcbPremiumFinal hidden" aria-hidden="true">
-  <div class="mcbPremiumCard">
-    <div class="mcbPremiumKicker">Has completado el Método McB</div>
-    <div class="mcbPremiumTitle">Tu práctica consciente merece ser celebrada.</div>
-    <div class="mcbPremiumText">
-      Este certificado reconoce tu compromiso contigo, con tu ritmo y con el cuidado consciente.
-    </div>
-    <div class="mcbPremiumActions">
-      <button id="mcbPremiumCertBtn" class="btn btn-primary focus-ring" type="button">Descargar mi certificado</button>
-      <button id="mcbPremiumCloseBtn" class="btn focus-ring" type="button">Seguir viendo mi panel</button>
-    </div>
-  </div>
-</div>
-
-
-<script>
-(function(){
-  function mcbIsCompleteSafe(){
-    try{ return typeof isProgramCompleted === "function" && isProgramCompleted(); }catch(e){ return false; }
-  }
-  function mcbShowPremiumFinal(){
-    const box = document.getElementById("mcbPremiumFinal");
-    if(!box) return;
-    if(mcbIsCompleteSafe()){
-      box.classList.remove("hidden");
-      box.setAttribute("aria-hidden","false");
-    }
-  }
-  window.addEventListener("load", () => {
-    const certBtn = document.getElementById("mcbPremiumCertBtn");
-    const closeBtn = document.getElementById("mcbPremiumCloseBtn");
-    const box = document.getElementById("mcbPremiumFinal");
-
-    if(certBtn){
-      certBtn.addEventListener("click", () => {
-        try{
-          if(typeof openCertModal === "function") openCertModal();
-        }catch(e){}
-      });
-    }
-    if(closeBtn && box){
-      closeBtn.addEventListener("click", () => box.classList.add("hidden"));
-    }
-    setTimeout(mcbShowPremiumFinal, 300);
-    setInterval(mcbShowPremiumFinal, 1800);
-  });
-})();
-</script>
 
 </body>
 </html>
