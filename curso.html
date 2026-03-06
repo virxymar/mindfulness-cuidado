@@ -174,38 +174,38 @@
       width: 1240px;
       height: 1754px;
       position: relative;
-      background: url('certificado_bg.png') center/cover no-repeat;
+      background: url('cert_bg.png') center/cover no-repeat;
       color: #2b2b2b;
     }
     .cert-logo{
       position:absolute;
       top: 90px;
-      left: 50%;
+      left: calc(50% + 70px);
       transform: translateX(-50%);
-      height: 220px;
+      height: 380px;
     }
     
     .cert-side-label{display:none !important;}
 
     .cert-title{
       position:absolute;
-      top: 360px;
-      left: 50%;
+      top: 372px;
+      left: calc(50% + 70px);
       transform: translateX(-50%);
       text-align:center;
       font-family: Lora, Georgia, serif;
       letter-spacing: .22em;
-      font-size: 52px;
+      font-size: 64px;
       color: rgba(40,40,40,.85);
-      line-height: 1.15;
+      line-height: 1.1;
     }
     .cert-sub{
       position:absolute;
-      top: 555px;
-      left: 50%;
+      top: 567px;
+      left: calc(50% + 70px);
       transform: translateX(-50%);
       text-align:center;
-      font-size: 18px;
+      font-size: 26px;
       color: rgba(40,40,40,.55);
       letter-spacing: .12em;
       font-style: italic;
@@ -213,25 +213,25 @@
     }
     .cert-name{
       position:absolute;
-      top: 650px;
-      left: 50%;
+      top: 662px;
+      left: calc(50% + 70px);
       transform: translateX(-50%);
       width: 720px;
       text-align:center;
       font-family: "Brush Script MT", "Segoe Script", "Snell Roundhand", cursive;
-      font-size: 56px;
+      font-size: 68px;
       color: rgba(35,35,35,.9);
       padding-bottom: 12px;
       border-bottom: 1px solid rgba(40,40,40,.25);
     }
     .cert-body{
       position:absolute;
-      top: 790px;
-      left: 50%;
+      top: 802px;
+      left: calc(50% + 70px);
       transform: translateX(-50%);
       width: 760px;
       text-align:center;
-      font-size: 18px;
+      font-size: 26px;
       line-height: 1.65;
       color: rgba(40,40,40,.70);
       font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
@@ -242,53 +242,53 @@
     }
     .cert-mantra{
       position:absolute;
-      top: 1085px;
-      left: 50%;
+      top: 1097px;
+      left: calc(50% + 70px);
       transform: translateX(-50%);
       width: 760px;
       text-align:center;
       font-family: Lora, Georgia, serif;
-      font-size: 22px;
+      font-size: 30px;
       font-style: italic;
       color: rgba(40,40,40,.65);
       line-height: 1.35;
     }
     .cert-signature{
-      position:absolute;
-      top: 1275px;
-      left: 50%;
-      transform: translateX(-50%);
-      text-align:center;
-      width: 760px;
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color: rgba(40,40,40,.72);
-    }
+  position:absolute;
+  left:80px;
+  right:0;
+  bottom:80px;
+  text-align:center;
+}
     .cert-signature img{
-      height: 140px;
-      display:block;
-      margin: 0 auto 10px;
-    }
-    .cert-signature .name{ font-size: 18px; }
-    .cert-signature .role{ font-size: 16px; opacity: .8; }
+  width: 560px;
+  max-width: 78%;
+  height: auto;
+  display:block;
+  margin: 0 auto;
+}
+    .cert-signature .name{ font-size: 24px; }
+    .cert-signature .role{ font-size: 22px; opacity: .8; }
     .cert-date{
-      position:absolute;
-      bottom: 70px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 18px;
-      color: rgba(40,40,40,.50);
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-    }
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:78px;
+  text-align:center;
+  font-size:24px;
+  line-height:1.2;
+  color:#6b6b6b;
+}
     .cert-id{
-      position:absolute;
-      bottom: 48px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 12px;
-      letter-spacing: .10em;
-      color: rgba(40,40,40,.45);
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-    }
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:40px;
+  text-align:center;
+  font-size:16px;
+  letter-spacing:0.08em;
+  color:#9a9a9a;
+}
 
   
 .certFooter {
@@ -298,10 +298,85 @@
   opacity: 0.5;
   letter-spacing: 0.05em;
 }
+
+/* ---- Pantalla final (cierre) ---- */
+.finalScreen{
+  position: fixed;
+  inset: 0;
+  background: rgba(255,255,255,.82);
+  backdrop-filter: blur(6px);
+  z-index: 9000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding: 18px;
+}
+.finalScreen.hidden{ display:none; }
+.finalCard{
+  width: min(760px, 96vw);
+  background: #fff;
+  border: 1px solid rgba(0,0,0,.06);
+  border-radius: 18px;
+  box-shadow: 0 18px 60px rgba(0,0,0,.12);
+  padding: 28px 26px;
+}
+.finalKicker{
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  font-size: 12px;
+  color: #8c8c8c;
+  margin-bottom: 8px;
+}
+.finalTitle{
+  font-size: 34px;
+  line-height: 1.15;
+  margin: 0 0 12px;
+}
+.finalText{
+  font-size: 16px;
+  line-height: 1.6;
+  color:#4d4d4d;
+  margin-bottom: 18px;
+}
+.finalActions{
+  display:flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.finalActions .btn{
+  padding: 10px 14px;
+  border-radius: 12px;
+}
+.finalSmall{
+  font-size: 12px;
+  color:#8c8c8c;
+}
+/* Certificado modal siempre por encima */
+#certBackdrop, .certBackdrop, .cert-backdrop, #certModalBackdrop, .certModalBackdrop{
+  z-index: 99999 !important;
+}
+
 </style>
 </head>
 
 <body>
+
+<div id="finalScreen" class="finalScreen hidden" aria-hidden="true">
+  <div class="finalCard">
+    <div class="finalKicker">Has completado el viaje</div>
+    <div class="finalTitle">Mindfulness del Cuidado</div>
+    <div class="finalText">
+      Gracias por sostenerte estos días. Lo que has hecho no es solo aprender: es volver a ti, paso a paso.
+    </div>
+    <div class="finalActions">
+      <button class="btn primary" id="finalOpenCertBtn" type="button">Descargar certificado</button>
+      <button class="btn" id="finalBackBtn" type="button">Volver al curso</button>
+    </div>
+    <div class="finalSmall">Tu progreso queda guardado en tu dispositivo.</div>
+  </div>
+</div>
+
   <a class="sr-only focus:not-sr-only focus-ring fixed top-3 left-3 z-50 btn" href="#main">Saltar al contenido</a>
 
   <header class="max-w-6xl mx-auto px-4 pt-6">
@@ -450,11 +525,11 @@
   <!-- Hoja del certificado (se renderiza a PDF; queda fuera de pantalla) -->
   <div id="certificateSheet" aria-hidden="true">
     <div class="cert-page">
-      <img class="cert-logo" src="logotipo3d.png" alt="McB">
+      <img class="cert-logo" src="logo3d.png" alt="McB">
 
       
       
-<div class="cert-title">DE PRÁCTICA<br>CONSCIENTE</div>
+<div class="cert-title">DE FINALIZACIÓN</div>
       <div class="cert-sub">Por la presente se certifica que</div>
 
       <div class="cert-name" id="certNameOut">(nombre)</div>
@@ -473,7 +548,7 @@
       </div>
 
       <div class="cert-signature">
-        <img src="firma.png" alt="Momentos con Blancanieves">
+        <img src="signature.png" alt="Momentos con Blancanieves">
 </div>
 
       <div class="cert-date" id="certDateOut">Fecha de finalización: —</div>
@@ -959,18 +1034,6 @@ function updateCertUI(){
       const safeName = String(participantName || "").trim();
       document.getElementById("certNameOut").textContent = safeName || "(nombre)";
 
-      (function fitCertName(){
-        const el = document.getElementById("certNameOut");
-        if(!el) return;
-        let size = 56;
-        el.style.whiteSpace = "nowrap";
-        el.style.fontSize = size + "px";
-        while (el.scrollWidth > el.clientWidth && size > 30){
-          size -= 1;
-          el.style.fontSize = size + "px";
-        }
-      })();
-
       // Fecha real de finalización (blindado): se fija al completar el programa.
       const finalDate = state.completedAt ? new Date(state.completedAt) : new Date();
       const months = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
@@ -1017,23 +1080,15 @@ function updateCertUI(){
         const pageW = pdf.internal.pageSize.getWidth();
         const pageH = pdf.internal.pageSize.getHeight();
 
-        // Ajuste perfecto a A4 manteniendo proporción (tu certificado ya tiene ratio A4)
-        const imgW = pageW;
-        const imgH = (canvas.height * imgW) / canvas.width;
+        // Ajuste a A4 (1 página) manteniendo proporción y centrado
+        const scale = Math.min(pageW / canvas.width, pageH / canvas.height);
+        const drawW = canvas.width * scale;
+        const drawH = canvas.height * scale;
+        const x = (pageW - drawW) / 2;
+        const y = (pageH - drawH) / 2;
 
-        // Si por algún motivo se pasa, lo partimos en páginas (pero debería ser 1)
-        let y = 0;
-        let remaining = imgH;
-
-        pdf.addImage(imgData, "JPEG", 0, y, imgW, imgH, undefined, "FAST");
-        while(remaining > pageH){
-          y -= pageH;
-          remaining -= pageH;
-          pdf.addPage();
-          pdf.addImage(imgData, "JPEG", 0, y, imgW, imgH, undefined, "FAST");
-        }
-
-        const base = (state.certificateId || "Certificado_McB").replace(/[^a-zA-Z0-9_-]+/g, "_");
+        pdf.addImage(imgData, "JPEG", x, y, drawW, drawH, undefined, "FAST");
+const base = (state.certificateId || "Certificado_McB").replace(/[^a-zA-Z0-9_-]+/g, "_");
         // Descarga robusta en Android (evita bloqueos de `save` tras awaits)
         try{
           const blob = pdf.output("blob");
@@ -1974,8 +2029,30 @@ function updateCertUI(){
       const btnCancelCert = document.getElementById("btnCancelCert");
       const btnConfirmCert = document.getElementById("btnConfirmCert");
 
-      function openCertModal(){
-        if(!isProgramCompleted()){
+      
+/* ---- McB: Validación CERTIFICADO (sin tocar la lógica del curso) ---- */
+function ritualCompletionCountForCert(){
+  // Preferimos el contador real guardado por el ritual
+  if(state && typeof state.ritualDays === "number") return state.ritualDays;
+  // Fallback al método antiguo si existe
+  if(typeof ritualCompletionCount === "function") return ritualCompletionCount();
+  return 0;
+}
+function isCourseCompletedForCert(){
+  // Preferimos la lógica original si existe
+  if(typeof isCourseCompleted === "function") return isCourseCompleted();
+  // Fallback: si existe completedLessons, exigimos 6 (el curso tiene 6 lecciones)
+  const arr = (state && Array.isArray(state.completedLessons)) ? state.completedLessons : [];
+  return arr.length >= 6;
+}
+function isCertUnlocked(){
+  return isCourseCompletedForCert() && ritualCompletionCountForCert() >= 21;
+}
+
+function openCertModal(){
+  
+        
+        if(!isCertUnlocked()){
           toast("Completa el método y el Ritual de 21 días (21/21) para descargar tu certificado.");
           return;
         }
@@ -3120,10 +3197,88 @@ if(!state.completedAt){
     document.body.appendChild(btn);
   });
 </script>
+
+<script>
+// ---- McB: mostrar cierre cuando está completado ----
+(function(){
+  function showFinalIfCompleted(){
+    try{
+      if(typeof isProgramCompleted !== "function") return;
+      const screen = document.getElementById("finalScreen");
+      if(!screen) return;
+      if(isCertUnlocked()){
+        screen.classList.remove("hidden");
+        screen.setAttribute("aria-hidden","false");
+      }
+    }catch(e){}
+  }
+
+  window.addEventListener("load", () => {
+    const screen = document.getElementById("finalScreen");
+    const openBtn = document.getElementById("finalOpenCertBtn");
+    const backBtn = document.getElementById("finalBackBtn");
+
+    if(openBtn){
+      openBtn.addEventListener("click", () => {
+        if(screen) screen.classList.add("hidden");
+        try{
+          if(typeof openCertModal === "function") openCertModal();
+        }catch(e){}
+      });
+    }
+    if(backBtn && screen){
+      backBtn.addEventListener("click", () => screen.classList.add("hidden"));
+    }
+
+    showFinalIfCompleted();
+    setInterval(showFinalIfCompleted, 1500);
+  });
+})();
+</script>
+
 </body>
 </html>
 
 </template>
+
+
+<script>
+// ---- McB: mostrar cierre cuando está completado ----
+(function(){
+  function showFinalIfCompleted(){
+    try{
+      if(typeof isProgramCompleted !== "function") return;
+      const screen = document.getElementById("finalScreen");
+      if(!screen) return;
+      if(isCertUnlocked()){
+        screen.classList.remove("hidden");
+        screen.setAttribute("aria-hidden","false");
+      }
+    }catch(e){}
+  }
+
+  window.addEventListener("load", () => {
+    const screen = document.getElementById("finalScreen");
+    const openBtn = document.getElementById("finalOpenCertBtn");
+    const backBtn = document.getElementById("finalBackBtn");
+
+    if(openBtn){
+      openBtn.addEventListener("click", () => {
+        if(screen) screen.classList.add("hidden");
+        try{
+          if(typeof openCertModal === "function") openCertModal();
+        }catch(e){}
+      });
+    }
+    if(backBtn && screen){
+      backBtn.addEventListener("click", () => screen.classList.add("hidden"));
+    }
+
+    showFinalIfCompleted();
+    setInterval(showFinalIfCompleted, 1500);
+  });
+})();
+</script>
 
 </body>
 </html>
