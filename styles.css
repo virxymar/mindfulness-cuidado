@@ -249,7 +249,8 @@ a{ color: inherit; text-decoration: none; }
 }
 
 .hero-logo{
-  width:160px;
+  width:190px;
+  max-width:42vw;
   margin-bottom:22px;
   opacity:.95;
   filter: drop-shadow(0 6px 14px rgba(0,0,0,.08));
