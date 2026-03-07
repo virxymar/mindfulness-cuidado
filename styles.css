@@ -249,10 +249,7 @@ a{ color: inherit; text-decoration: none; }
 }
 
 .hero-logo{
-  position:absolute;
-  top:-60px;
-  left:-80px;
-  width:420px;
-  opacity:.18;
-  pointer-events:none;
+  width:60px;
+  margin-bottom:18px;
+  opacity:.95;
 }
