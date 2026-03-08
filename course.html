@@ -3,7 +3,6 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="robots" content="noindex,nofollow,noarchive" />
   <title>Mindfulness del Cuidado · Momentos con Blancanieves</title>
 
   <!-- Fonts (CDN) -->
@@ -175,7 +174,7 @@
       width: 1240px;
       height: 1754px;
       position: relative;
-      background: url('certificado_bg.png') center/cover no-repeat;
+      background: url('cert_bg.png') center/cover no-repeat;
       color: #2b2b2b;
     }
     .cert-logo{
@@ -362,24 +361,33 @@
     .course-access-gate{position:fixed; inset:0; background:rgba(15,15,15,.58); z-index:999999; display:none; align-items:center; justify-content:center; padding:18px;}
     .course-access-card{background:var(--card); border:1px solid var(--line); box-shadow:var(--shadow); border-radius:18px; width:min(520px, 92vw); padding:22px;}
     .course-access-input{width:100%; border:1px solid var(--line); background:var(--card); border-radius:14px; padding:12px 12px;}
+    .course-access-row{display:flex; gap:10px; align-items:center;}
+    .course-access-toggle{white-space:nowrap;}
+    .course-access-note{margin-top:14px; color:var(--muted); font-size:12px; line-height:1.6;}
     .course-access-error{min-height:20px; margin-top:10px; color:#b91c1c; font-size:13px;}
+    @media (max-width:680px){ .course-access-row{flex-direction:column; align-items:stretch;} .course-access-toggle,.course-access-submit{width:100%;} }
 
 </style>
 </head>
 
 <body>
 
+
 <div id="courseAccessGate" class="course-access-gate" aria-hidden="true">
   <div class="course-access-card">
     <div class="serif text-lg">Acceso privado</div>
     <p class="text-sm mt-2" style="color: var(--muted);">Este contenido forma parte del área privada del Método McB. Introduce tu clave para continuar.</p>
+    <p class="course-access-note"><strong>Acceso personal e intransferible.</strong> Recibirás tu clave individual tras confirmar tu Bizum.</p>
     <label class="block mt-4">
       <span class="text-xs" style="color: var(--muted);">Clave de acceso</span>
-      <input class="course-access-input focus-ring mt-1" id="courseAccessInput" type="password" placeholder="Introduce tu clave">
+      <div class="course-access-row mt-1">
+        <input class="course-access-input focus-ring" id="courseAccessInput" type="password" placeholder="Introduce tu clave">
+        <button class="btn focus-ring course-access-toggle" id="courseAccessToggle" type="button">Mostrar</button>
+      </div>
     </label>
     <div id="courseAccessError" class="course-access-error"></div>
     <div class="mt-4 flex justify-end">
-      <button class="btn btn-primary focus-ring" id="courseAccessBtn" type="button">Entrar</button>
+      <button class="btn btn-primary focus-ring course-access-submit" id="courseAccessBtn" type="button">Entrar</button>
     </div>
   </div>
 </div>
@@ -548,7 +556,7 @@
   <!-- Hoja del certificado (se renderiza a PDF; queda fuera de pantalla) -->
   <div id="certificateSheet" aria-hidden="true">
     <div class="cert-page">
-      <img class="cert-logo" src="logotipo3d.png" alt="McB">
+      <img class="cert-logo" src="logo3d.png" alt="McB">
 
       
       
@@ -571,7 +579,7 @@
       </div>
 
       <div class="cert-signature">
-        <img src="firma.png" alt="Momentos con Blancanieves">
+        <img src="signature.png" alt="Momentos con Blancanieves">
 </div>
 
       <div class="cert-date" id="certDateOut">Fecha de finalización: —</div>
@@ -905,10 +913,6 @@
 
     // ======== Estado persistente ========
     const STORAGE_KEY = "mcb_mindfulness_curso_v1";
-    const CERT_REGISTRY_KEY = "mcb_certificate_registry_v1";
-    const ACCESS_CODE_KEY = "mcb_access_code_v1";
-    const ACCESS_GRANTED_KEY = "mcb_access_granted_v1";
-    const ACCESS_CODE = "MCB-ALUMNAS-2026";
     const todayKey = () => new Date().toISOString().slice(0,10);
 
     const defaultState = () => ({
@@ -944,76 +948,6 @@
     }
 
     let state = loadState();
-
-    function accessParam(){
-      try{ return (new URLSearchParams(location.search).get("access") || "").trim(); }catch(e){ return ""; }
-    }
-
-    function hasCourseAccess(){
-      return localStorage.getItem(ACCESS_GRANTED_KEY) === "yes" && localStorage.getItem(ACCESS_CODE_KEY) === ACCESS_CODE;
-    }
-
-    function grantCourseAccess(code){
-      localStorage.setItem(ACCESS_CODE_KEY, code);
-      localStorage.setItem(ACCESS_GRANTED_KEY, "yes");
-      const gate = document.getElementById("courseAccessGate");
-      if(gate) gate.style.display = "none";
-    }
-
-    function ensureCourseAccess(){
-      const gate = document.getElementById("courseAccessGate");
-      const direct = accessParam();
-      if(direct && direct === ACCESS_CODE){
-        grantCourseAccess(direct);
-        return true;
-      }
-      if(hasCourseAccess()){
-        if(gate) gate.style.display = "none";
-        return true;
-      }
-      if(gate) gate.style.display = "flex";
-      return false;
-    }
-
-    function certRegistry(){
-      try{ return JSON.parse(localStorage.getItem(CERT_REGISTRY_KEY) || "{}"); }catch(e){ return {}; }
-    }
-
-    function saveCertRegistry(reg){
-      localStorage.setItem(CERT_REGISTRY_KEY, JSON.stringify(reg));
-    }
-
-    function simpleHash(input){
-      let h = 2166136261;
-      for(let i = 0; i < input.length; i++){
-        h ^= input.charCodeAt(i);
-        h = Math.imul(h, 16777619);
-      }
-      return (h >>> 0).toString(16).toUpperCase().padStart(8, "0");
-    }
-
-    function formatCompletedAtText(dateIso){
-      const d = new Date(dateIso || Date.now());
-      const months = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
-      return `${d.getDate()} de ${months[d.getMonth()]} de ${d.getFullYear()}`;
-    }
-
-    function registerCertificateRecord(participantName){
-      const reg = certRegistry();
-      const certificateId = state.certificateId || "";
-      if(!certificateId) return;
-      const payload = `${certificateId}|${participantName}|${state.completedAt || ""}|MCB`;
-      reg[certificateId] = {
-        certificateId,
-        participantName,
-        completedAt: state.completedAt || null,
-        completedAtText: formatCompletedAtText(state.completedAt),
-        issuedAt: new Date().toISOString(),
-        issuedAtText: formatCompletedAtText(new Date().toISOString()),
-        signature: simpleHash(payload)
-      };
-      saveCertRegistry(reg);
-    }
 
     // ======== Utilidades ========
     const $ = (sel) => document.querySelector(sel);
@@ -1139,7 +1073,6 @@ function updateCertUI(){
 
       // ID del certificado
       document.getElementById("certIdOut").textContent = state.certificateId || "";
-      registerCertificateRecord(safeName);
 
       const certEl = document.querySelector("#certificateSheet .cert-page");
       if(!certEl){
@@ -2102,6 +2035,27 @@ const base = (state.certificateId || "Certificado_McB").replace(/[^a-zA-Z0-9_-]+
       toast("Progreso reiniciado.");
     }
 
+    
+    const ACCESS_CODE = "McB-Alumnas-2026";
+    const ACCESS_STORAGE_KEY = "mcb_access_ok_v3";
+
+    function ensureCourseAccess(){
+      const gate = document.getElementById("courseAccessGate");
+      if(!gate) return;
+      if(localStorage.getItem(ACCESS_STORAGE_KEY) === "ok") return;
+      gate.style.display = "flex";
+      gate.setAttribute("aria-hidden", "false");
+    }
+
+    function grantCourseAccess(){
+      const gate = document.getElementById("courseAccessGate");
+      localStorage.setItem(ACCESS_STORAGE_KEY, "ok");
+      if(gate){
+        gate.style.display = "none";
+        gate.setAttribute("aria-hidden", "true");
+      }
+    }
+
     // ======== Wire top-level ========
     function wire(){
       setTheme(state.theme || "light");
@@ -2109,6 +2063,14 @@ const base = (state.certificateId || "Certificado_McB").replace(/[^a-zA-Z0-9_-]+
       const accessBtn = document.getElementById("courseAccessBtn");
       const accessInput = document.getElementById("courseAccessInput");
       const accessError = document.getElementById("courseAccessError");
+      const accessToggle = document.getElementById("courseAccessToggle");
+      if(accessToggle && accessInput){
+        accessToggle.addEventListener("click", () => {
+          const showing = accessInput.type === "text";
+          accessInput.type = showing ? "password" : "text";
+          accessToggle.textContent = showing ? "Mostrar" : "Ocultar";
+        });
+      }
       if(accessBtn && accessInput){
         accessBtn.addEventListener("click", () => {
           const value = (accessInput.value || "").trim();
@@ -2117,7 +2079,7 @@ const base = (state.certificateId || "Certificado_McB").replace(/[^a-zA-Z0-9_-]+
             return;
           }
           accessError.textContent = "";
-          grantCourseAccess(value);
+          grantCourseAccess();
         });
         accessInput.addEventListener("keydown", (e) => { if(e.key === "Enter") accessBtn.click(); });
       }
